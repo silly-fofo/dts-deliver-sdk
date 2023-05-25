@@ -10,11 +10,15 @@ import com.aliyun.dts.deliver.connector.BaseConnector;
 import com.aliyun.dts.deliver.protocol.generated.DtsConnectionStatus;
 import com.aliyun.dts.deliver.protocol.record.Record;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class DStoreDestination extends BaseConnector implements Destination {
+    private static final Logger LOG = LoggerFactory.getLogger(DStoreDestination.class);
 
     private Settings settings;
     private Pair<String, String> userPassword;
@@ -31,6 +35,15 @@ public class DStoreDestination extends BaseConnector implements Destination {
                 GlobalSettings.DTS_JOB_ID.getValue(settings),
                 GlobalSettings.DTS_OPENAPI_REGION.getValue(settings)
         );
+
+        String userName = GlobalSettings.DTS_DELIVER_USER.getValue(settings);
+        String password = GlobalSettings.DTS_DELIVER_PASSWORD.getValue(settings);
+
+        if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(password)){
+            LOG.info("user and password is not null, just use it");
+            dtsOpenApi.setUserName(userName);
+            dtsOpenApi.setPassword(password);
+        }
 
         this.userPassword = dtsOpenApi.getUserPassword();
 

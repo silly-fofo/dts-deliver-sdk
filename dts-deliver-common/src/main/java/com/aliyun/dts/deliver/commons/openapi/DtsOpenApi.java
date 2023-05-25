@@ -17,6 +17,9 @@ public class DtsOpenApi {
     private String dtsInstance;
     private String region;
 
+    private String userName;
+    private String password;
+
     public DtsOpenApi(String ak, String secret, String dtsInstance, String region) {
         this.ak = ak;
         this.secret = secret;
@@ -24,7 +27,29 @@ public class DtsOpenApi {
         this.region = region;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
     public Pair<String, String> getUserPassword() throws Exception {
+
+        if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(password)) {
+            return Pair.of(userName, password);
+        }
+
         com.aliyun.dts20200101.Client client  = createClient(ak, secret);
 
         DescribeChannelAccountRequest describeChannelAccountRequest = new DescribeChannelAccountRequest();

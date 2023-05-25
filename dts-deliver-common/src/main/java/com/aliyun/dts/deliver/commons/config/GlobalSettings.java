@@ -22,6 +22,11 @@ public interface GlobalSettings {
     Settings.Setting<String> ALIYUN_SECRET = Settings.stringSetting(
             "aliyun.secret", "the aliyun secret to get real user password and dbList");
 
+    Settings.Setting<String> DTS_DELIVER_USER = Settings.stringSetting(
+            "dts.deliver.user", "the dts deliver user name");
+    Settings.Setting<String> DTS_DELIVER_PASSWORD = Settings.stringSetting(
+            "dts.deliver.password", "the dts deliver password");
+
     Settings.Setting<String> DTS_JOB_ID = Settings.stringSetting(
             "dts.job.id", "dts job id");
 

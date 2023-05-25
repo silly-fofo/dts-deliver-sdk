@@ -65,7 +65,7 @@ public class FakeSource implements Source {
 
     @Override
     public AutoCloseableIterator<DtsMessage> read(Settings settings, ConfiguredDtsCatalog catalog, JsonNode state) throws Exception {
-        long timestamp = 1685001787 + + recordOffset.getAndIncrement();
+        long timestamp = 1685017294 + + recordOffset.getAndIncrement();
 
         //DML Record
         Record record1 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("aaa@" + recordOffset.getAndIncrement()), GROUP_KEY1, name, DB_NAME1, TABLE_NAME1, OperationType.INSERT, timestamp,
