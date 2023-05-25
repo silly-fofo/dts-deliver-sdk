@@ -165,10 +165,6 @@ public class DStoreRecordConsumer extends FailureTrackingDtsMessageConsumer {
                 errorHandler.accept(e);
             }
         }
-
-        if (affectCount == 0) {
-            LOGGER.warn(name + ": affect 0 row");
-        }
         return affectCount;
     }
 
