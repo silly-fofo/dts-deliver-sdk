@@ -85,7 +85,6 @@ public class RecordAssemblyDispatcher extends AbstractRecordStoreWithMetrics {
         if (dtsMessage.getRecord() != null) {
             String sourceName = dtsMessage.getRecord().getUniqueSourceName();
             Preconditions.checkArgument(this.resolveStrategy.resolve(dtsMessage));
-
         }
     }
 

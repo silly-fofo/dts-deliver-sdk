@@ -26,21 +26,25 @@ public class DtsDeliverTest {
         String configPath = "";
         Map<String, String> settingValueMap = new HashMap<>();
 
-        settingValueMap.put(GlobalSettings.DTS_BOOTSTRAP_SERVERS_CONFIG.getKey(), "dts_proxy_url");
-        settingValueMap.put(GlobalSettings.ALIYUN_AK.getKey(), "ak");
-        settingValueMap.put(GlobalSettings.ALIYUN_SECRET.getKey(), "secret");
-        settingValueMap.put(GlobalSettings.DTS_JOB_ID.getKey(), "dts_instance_id");
+        settingValueMap.put(GlobalSettings.DTS_BOOTSTRAP_SERVERS_CONFIG.getKey(), "ip:port");
+//        settingValueMap.put(GlobalSettings.ALIYUN_AK.getKey(), "ak");
+//        settingValueMap.put(GlobalSettings.ALIYUN_SECRET.getKey(), "secret");
+
+        settingValueMap.put(GlobalSettings.DTS_DELIVER_USER.getKey(), "user-sid");
+        settingValueMap.put(GlobalSettings.DTS_DELIVER_PASSWORD.getKey(), "password");
+
+        settingValueMap.put(GlobalSettings.DTS_JOB_ID.getKey(), "");
         settingValueMap.put(GlobalSettings.DTS_DELIVER_TOPIC.getKey(), "topic");
-        settingValueMap.put(GlobalSettings.DTS_DELIVER_TOPIC_PARTITION_NUM.getKey(), "3");
-        settingValueMap.put(GlobalSettings.DTS_OPENAPI_REGION.getKey(), "cn-hangzhou");
+        settingValueMap.put(GlobalSettings.DTS_DELIVER_TOPIC_PARTITION_NUM.getKey(), "partition");
+        settingValueMap.put(GlobalSettings.DTS_OPENAPI_REGION.getKey(), "region");
 
         JobConfig jobConfig = new JobConfig(configPath, settingValueMap);
 
         //source
         List<Source> sourceList = new ArrayList<>();
-        Source source1 = new FakeSource("source 1", jobConfig.getSettings());
-        Source source2 = new FakeSource("source 2", jobConfig.getSettings());
-        Source source3 = new FakeSource("source 3", jobConfig.getSettings());
+        Source source1 = new FakeSource("source 1", jobConfig.getSettings(), "dts_deliver_test", "tab1", 100);
+        Source source2 = new FakeSource("source 2", jobConfig.getSettings(), "dts_deliver_test", "tab2", 200);
+        Source source3 = new FakeSource("source 3", jobConfig.getSettings(), "dts_deliver_test", "tab3", 300);
         sourceList.add(source1);
         sourceList.add(source2);
         sourceList.add(source3);

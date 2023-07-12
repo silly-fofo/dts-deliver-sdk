@@ -31,8 +31,8 @@ public class IncrementSinkTask extends SinkTask {
     private Queue<Future> futureQueue = new ArrayDeque<>();
     private int MAX_FUTURE_LIST_SIZE = 10;
 
-    public IncrementSinkTask(Settings settings, Destination destination, AbstractRecordStoreWithMetrics recordStore, RecordPipeline destPipeline, int partition) {
-        super(settings, destination, recordStore, destPipeline, partition);
+    public IncrementSinkTask(Settings settings, Destination destination, AbstractRecordStoreWithMetrics recordStore, RecordPipeline destPipeline) {
+        super(settings, destination, recordStore, destPipeline);
     }
 
     @Override

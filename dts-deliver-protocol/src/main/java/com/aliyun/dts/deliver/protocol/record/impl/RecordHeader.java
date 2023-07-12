@@ -97,15 +97,16 @@ public class RecordHeader {
 
     @Override
     public String toString() {
-        return "RecordHeader{"
-                + "version=" + version
-                + ", id=" + id
-                + ", sourceTimestamp=" + sourceTimestamp
-                + ", sourcePosition='" + sourcePosition + '\''
-                + ", safeSourcePosition='" + safeSourcePosition + '\''
-                + ", sourceTxid='" + sourceTxid + '\''
-                + ", source='" + source + '\''
-                + '}';
+        return "RecordHeader{" +
+                "version=" + version +
+                ", id=" + id +
+                ", sourceTimestamp=" + sourceTimestamp +
+                ", sourcePosition='" + sourcePosition + '\'' +
+                ", safeSourcePosition='" + safeSourcePosition + '\'' +
+                ", sourceTxid='" + sourceTxid + '\'' +
+                ", source='" + source + '\'' +
+                ", uniqueSourceName='" + uniqueSourceName + '\'' +
+                '}';
     }
 
     public long size() {

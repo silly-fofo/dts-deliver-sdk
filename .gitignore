@@ -7,5 +7,5 @@ error.log
 logs
 udf.log
 dts-deliver.log
-
-
+*/.DS_Store
+.DS_Store

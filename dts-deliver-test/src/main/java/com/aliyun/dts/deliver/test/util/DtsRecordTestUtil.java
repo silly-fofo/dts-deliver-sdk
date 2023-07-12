@@ -27,7 +27,7 @@ public class DtsRecordTestUtil {
 
         RecordHeader recordHeader = new RecordHeader(sourceName, String.valueOf(timestamp));
         recordHeader.setSourceTimestamp(timestamp);
-        recordHeader.setSource("OTHER");
+        recordHeader.setSource("MySQL");
         recordHeader.setVersion(1);
        if (opType == OperationType.HEARTBEAT || opType == OperationType.BEGIN || opType == OperationType.COMMIT) {
            DefaultRecord ret = new MockRecord(opType, null, recordHeader);
