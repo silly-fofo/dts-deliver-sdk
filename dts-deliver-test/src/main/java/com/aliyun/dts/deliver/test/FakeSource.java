@@ -26,26 +26,34 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeSource implements Source {
 
-    public static final String DB_NAME1 = "dts_deliver_test";
-    public static final String TABLE_NAME1 = "tab1";
-    public static final long GROUP_KEY1 = 100;
+//    public static final String DB_NAME1 = "dts_deliver_test";
+//    public static final String TABLE_NAME1 = "tab1";
+//    public static final long GROUP_KEY1 = 100;
+//
+//    public static final String DB_NAME2 = "dts_deliver_test";
+//    public static final String TABLE_NAME2 = "tab2";
+//    public static final long GROUP_KEY2 = 200;
+//
+//    protected static final String DB_NAME3 = "dts_deliver_test";
+//    protected static final String TABLE_NAME3 = "tab3";
+//    protected static final long GROUP_KEY3 = 300;
 
-    public static final String DB_NAME2 = "dts_deliver_test";
-    public static final String TABLE_NAME2 = "tab2";
-    public static final long GROUP_KEY2 = 200;
-
-    protected static final String DB_NAME3 = "dts_deliver_test";
-    protected static final String TABLE_NAME3 = "tab3";
-    protected static final long GROUP_KEY3 = 300;
+    private String dbName;
+    private String tableName;
+    private long groupName;
 
     private String name;
     private Settings settings;
 
     private AtomicLong recordOffset = new AtomicLong();
 
-    public FakeSource(String name, Settings settings) {
+    public FakeSource(String name, Settings settings, String dbName, String tableName, long groupName) {
         this.name = name;
         this.settings = settings;
+
+        this.dbName = dbName;
+        this.tableName = tableName;
+        this.groupName = groupName;
     }
 
     @Override
@@ -65,40 +73,42 @@ public class FakeSource implements Source {
 
     @Override
     public AutoCloseableIterator<DtsMessage> read(Settings settings, ConfiguredDtsCatalog catalog, JsonNode state) throws Exception {
-        long timestamp = 1685017294 + + recordOffset.getAndIncrement();
-
-        //DML Record
-        Record record1 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("aaa@" + recordOffset.getAndIncrement()), GROUP_KEY1, name, DB_NAME1, TABLE_NAME1, OperationType.INSERT, timestamp,
-                DtsRecordTestUtil.createField("id1", "1", null, true, false),
-                DtsRecordTestUtil.createField("id2", "2", "uk1", false, false),
-                DtsRecordTestUtil.createField("id3", "3", "uk2", false, false));
-
-        Record record2 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("bbb@" + recordOffset.getAndIncrement()), GROUP_KEY2, name, DB_NAME2, TABLE_NAME2, OperationType.INSERT, timestamp,
-                DtsRecordTestUtil.createField("id1", "1", null, true, false),
-                DtsRecordTestUtil.createField("id2", "2", "uk1", false, false),
-                DtsRecordTestUtil.createField("id3", "3", "uk2", false, false));
-
-        Record record3 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("ccc@" + + recordOffset.getAndIncrement()), GROUP_KEY3, name, DB_NAME3, TABLE_NAME3, OperationType.INSERT, timestamp,
-                DtsRecordTestUtil.createField("id1", "1", null, true, false),
-                DtsRecordTestUtil.createField("id2", "2", "uk1", false, false),
-                DtsRecordTestUtil.createField("id3", "3", "uk2", false, false));
-
-        List<DtsMessage> dtsMessageList = new ArrayList<>();
-        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withGroupKey(GROUP_KEY1).withRecord(record1));
-        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withGroupKey(GROUP_KEY2).withRecord(record2));
-        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withGroupKey(GROUP_KEY3).withRecord(record3));
-
+        long timestamp = System.currentTimeMillis() / 1000 + + recordOffset.getAndIncrement();
 
         //DDL Record
-
         RecordHeader recordHeader = new RecordHeader(name, String.valueOf(timestamp));
         recordHeader.setSourceTimestamp(timestamp);
-        recordHeader.setSource("OTHER");
+        recordHeader.setSource("MySQL");
         recordHeader.setVersion(1);
-        DefaultRecord createTableDDLRecord = DDLRecord.buildDDLRecord(getCreateTableJsonSql(), DB_NAME1, TABLE_NAME1, new MockRecordCheckpoint("ddd@" + + recordOffset.getAndIncrement()), recordHeader);
-        createTableDDLRecord.setGroupKey(GROUP_KEY3);
 
-        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withGroupKey(GROUP_KEY3).withRecord(createTableDDLRecord));
+        String ddlSql = getCreateTableJsonSql(dbName, tableName);
+        System.out.println("ddlSql: ");
+        System.out.println(ddlSql);
+
+        DefaultRecord createTableDDLRecord = DDLRecord.buildDDLRecord(ddlSql, dbName, tableName, new MockRecordCheckpoint("ddd@" + + recordOffset.getAndIncrement()), recordHeader);
+        createTableDDLRecord.setGroupKey(groupName);
+
+        //DML Record
+        Record record1 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("aaa@" + recordOffset.getAndIncrement()), groupName, name, dbName, tableName, OperationType.INSERT, timestamp,
+                DtsRecordTestUtil.createField("id1", "1", null, true, false),
+                DtsRecordTestUtil.createField("id2", "2", "uk1", false, false),
+                DtsRecordTestUtil.createField("id3", "3", "uk2", false, false));
+
+        Record record2 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("bbb@" + recordOffset.getAndIncrement()), groupName, name, dbName, tableName, OperationType.INSERT, timestamp,
+                DtsRecordTestUtil.createField("id1", "4", null, true, false),
+                DtsRecordTestUtil.createField("id2", "5", "uk1", false, false),
+                DtsRecordTestUtil.createField("id3", "6", "uk2", false, false));
+
+        Record record3 = DtsRecordTestUtil.createRecord(new MockRecordCheckpoint("ccc@" + + recordOffset.getAndIncrement()), groupName, name, dbName, tableName, OperationType.INSERT, timestamp,
+                DtsRecordTestUtil.createField("id1", "7", null, true, false),
+                DtsRecordTestUtil.createField("id2", "8", "uk1", false, false),
+                DtsRecordTestUtil.createField("id3", "9", "uk2", false, false));
+
+        List<DtsMessage> dtsMessageList = new ArrayList<>();
+        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withRecord(createTableDDLRecord));
+        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withRecord(record1));
+        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withRecord(record2));
+        dtsMessageList.add(new DtsMessage().withType(DtsMessage.Type.RECORD).withRecord(record3));
 
         //sleep 3s
         try {
@@ -114,15 +124,15 @@ public class FakeSource implements Source {
 
     }
 
-    private String getCreateTableJsonSql() {
+    private String getCreateTableJsonSql(String dbName, String tableName) {
         return "\n" +
                 "  {\n" +
                 "    \"opType\": \"CREATE TABLE\",\n" +
                 "    \"sdbType\": \"dameng\",\n" +
                 "    \"sdbVersion\": \"5.6\",\n" +
-                "    \"dbName\": \"dts_deliver_test\",\n" +
-                "    \"schemaName\": \"dts_deliver_test\", \n" +
-                "    \"tableName\": \"tab1\", \n" +
+                "    \"dbName\": \"" + dbName + "\",\n" +
+                "    \"schemaName\": \"" + dbName + "\", \n" +
+                "    \"tableName\": \"" + tableName + "\", \n" +
                 "    \"columns\": [\n" +
                 "      {\n" +
                 "        \"name\": \"id1\",\n" +

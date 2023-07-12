@@ -116,13 +116,9 @@ public class DtsIntegrationRunner {
             soureTasks.add(sourceTask);
         }
 
-        for (int i = 0; i < topicPartitionNum; i++) {
-            RecordPipeline destinationRecordPipeline = buildDestinationMessagePipeline(destination);
-
-            Task sinkTask = taskSubmitter.submitSinkTask(recordStore, destination, destinationRecordPipeline, i);
-
-            sinkTasks.add(sinkTask);
-        }
+        RecordPipeline destinationRecordPipeline = buildDestinationMessagePipeline(destination);
+        Task sinkTask = taskSubmitter.submitSinkTask(recordStore, destination, destinationRecordPipeline);
+        sinkTasks.add(sinkTask);
 
         saveCheckpointPeriodically();
     }

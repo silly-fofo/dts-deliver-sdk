@@ -65,8 +65,8 @@ public class TaskSubmitter {
         return submitNormalTask(task);
     }
 
-    public Task submitSinkTask(AbstractRecordStoreWithMetrics recordStore, Destination destination, RecordPipeline recordPipeline, int partition) {
-        SinkTask task = new IncrementSinkTask(this.settings, destination, recordStore, recordPipeline, partition);
+    public Task submitSinkTask(AbstractRecordStoreWithMetrics recordStore, Destination destination, RecordPipeline recordPipeline) {
+        SinkTask task = new IncrementSinkTask(this.settings, destination, recordStore, recordPipeline);
         task.setContext(context);
         return submitNormalTask(task);
     }

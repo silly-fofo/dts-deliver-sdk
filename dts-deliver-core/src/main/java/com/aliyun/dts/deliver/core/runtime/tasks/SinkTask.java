@@ -25,13 +25,11 @@ public abstract class SinkTask extends Task {
 
     protected final RecordPipeline destPipeline;
 
-    protected int partition;
-
     /**
      * Construct a SinkTask object to handle sink task.
      */
     public SinkTask(Settings settings, Destination destination, AbstractRecordStoreWithMetrics recordStore,
-                    RecordPipeline destPipeline, int partition) {
+                    RecordPipeline destPipeline) {
 
         super(BASE_TASK_NAME, SINK_TASK_ID_GENERATOR.incrementAndGet());
 
@@ -42,7 +40,6 @@ public abstract class SinkTask extends Task {
 
         this.destPipeline = destPipeline;
 
-        this.partition = partition;
     }
 
     protected abstract void sinkRecords(Destination destination, AbstractRecordStoreWithMetrics recordStore,
